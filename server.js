@@ -28,4 +28,13 @@ app.post("/login", (req, res) => {
   }
 });
 
+// GET /profile: reads the username back out of the session
+app.get("/profile", (req, res) => {
+  if (!req.session.username) {
+    res.send('You are not logged in. <a href="login.html">Login here</a>');
+  } else {
+    res.send(`Hi ${req.session.username}! <br><a href="/logout">Logout</a>`);
+  }
+});
+
 app.listen(3000, () => console.log("Server running at http://localhost:3000"));
