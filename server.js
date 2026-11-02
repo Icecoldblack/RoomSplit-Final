@@ -37,4 +37,11 @@ app.get("/profile", (req, res) => {
   }
 });
 
+// GET /logout: destroys the session so the username is gone
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.send('Logged out! <a href="login.html">Login again</a>');
+  });
+});
+
 app.listen(3000, () => console.log("Server running at http://localhost:3000"));
