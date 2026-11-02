@@ -14,4 +14,18 @@ app.use(session({
   cookie: { maxAge: 60000 * 60, httpOnly: true, secure: false } // 1 hour
 }));
 
+// Demo users (kept simple on purpose; a real site would use a database)
+const users = { dave: "password123", sam: "letmein" };
+
+// POST /login: check credentials, then store the username in the session
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (users[username] && users[username] === password) {
+    req.session.username = username; // the session variable
+    res.send('Logged in! Visit your <a href="/profile">profile</a>.');
+  } else {
+    res.send('Wrong username or password. <a href="login.html">Try again</a>');
+  }
+});
+
 app.listen(3000, () => console.log("Server running at http://localhost:3000"));
