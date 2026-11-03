@@ -10,11 +10,14 @@
   const plotH = height - pad.top - pad.bottom;
 
   const max = Math.max(...data.map((d) => Math.max(d.income, d.costs)), 1);
-  // Round the axis up to a tidy number (e.g. 2,743 -> 3,000)
-  const step = 10 ** Math.floor(Math.log10(max));
-  const top = Math.ceil(max / step) * step;
+  // Gridlines every 1, 2, 2.5 or 5 x a power of ten, so labels land on round numbers
+  const rough = max / 4;
+  const magnitude = 10 ** Math.floor(Math.log10(rough));
+  const step = [1, 2, 2.5, 5, 10].find((m) => m * magnitude >= rough) * magnitude;
+  const ticks = Math.ceil(max / step);
+  const top = ticks * step;
   const y = (v) => pad.top + plotH - (v / top) * plotH;
-  const short = (v) => (v >= 1000 ? `$${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : `$${v}`);
+  const short = (v) => (v >= 1000 ? `$${+(v / 1000).toFixed(1)}k` : `$${v}`);
   const money = (v) => v.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
   const ns = "http://www.w3.org/2000/svg";
@@ -29,8 +32,8 @@
     "aria-label": "Rent collected compared with costs for the last six months" });
 
   // Gridlines and y-axis labels
-  for (let i = 0; i <= 4; i++) {
-    const value = (top / 4) * i;
+  for (let i = 0; i <= ticks; i++) {
+    const value = step * i;
     svg.append(el("line", { x1: pad.left, x2: width - pad.right, y1: y(value), y2: y(value), class: i ? "grid-line" : "axis" }));
     svg.append(el("text", { x: pad.left - 8, y: y(value) + 4, "text-anchor": "end", class: "label" }, short(value)));
   }

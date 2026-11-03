@@ -37,7 +37,7 @@
   <div class="stat">
     <div class="stat-label">Net cash flow</div>
     <div class="stat-value <%= stats.net >= 0 ? "positive" : "negative" %>"><%= stats.net < 0 ? "−" : "" %><%= money(Math.abs(stats.net)) %></div>
-    <div class="stat-sub"><%= money(stats.net * 12) %> a year at this rate</div>
+    <div class="stat-sub"><%= stats.net < 0 ? "−" : "" %><%= money(Math.abs(stats.net * 12)) %> a year at this rate</div>
   </div>
   <div class="stat">
     <div class="stat-label">Occupancy</div>
