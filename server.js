@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const session = require("express-session");
 const helpers = require("./lib/helpers");
+const { requireLogin } = require("./lib/auth");
 
 const app = express();
 
@@ -37,6 +38,9 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => res.render("home", { title: "Home" }));
 app.get("/about", (req, res) => res.render("about", { title: "About" }));
 app.use(require("./routes/auth"));
+
+// Everything below these paths is for logged-in owners only (viewing and changing data)
+app.use(["/dashboard", "/rooms", "/tenants", "/payments", "/expenses", "/scenarios"], requireLogin);
 
 // Anything else is a 404
 app.use((req, res) => {
