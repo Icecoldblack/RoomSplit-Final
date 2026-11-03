@@ -238,6 +238,18 @@ a:hover { color: var(--primary-ink); }
 .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .stack > * + * { margin-top: 1.25rem; }
 
+/* List on the left, "add" form on the right */
+.layout-split {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .layout-split { grid-template-columns: 1fr; }
+}
+.narrow { max-width: 640px; }
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);

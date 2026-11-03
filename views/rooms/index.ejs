@@ -1,0 +1,59 @@
+<%- include("../partials/header") %>
+
+<%
+  const occupied = rooms.filter((r) => r.status.key === "occupied").length;
+  const totalRent = rooms.reduce((sum, r) => sum + r.monthly_rent, 0);
+%>
+
+<div class="page-head">
+  <div>
+    <h1>Rooms</h1>
+    <p><%= rooms.length %> room<%= rooms.length === 1 ? "" : "s" %> &middot; <%= occupied %> occupied &middot; <%= money(totalRent) %>/mo asking rent</p>
+  </div>
+</div>
+
+<div class="layout-split">
+  <div class="card">
+    <div class="card-head"><h2>Your rooms</h2></div>
+    <% if (!rooms.length) { %>
+      <div class="empty">No rooms yet. Add your first room with the form.</div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Room</th><th class="text-right">Rent</th><th>Size</th><th>Tenant</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr>
+          </thead>
+          <tbody>
+            <% rooms.forEach((room) => { %>
+              <tr>
+                <td>
+                  <strong><%= room.name %></strong>
+                  <% if (room.notes) { %><div class="muted small"><%= room.notes %></div><% } %>
+                </td>
+                <td class="text-right num"><%= money(room.monthly_rent) %></td>
+                <td class="num"><%= room.size_sqft ? room.size_sqft + " sq ft" : "—" %></td>
+                <td><%= room.tenant_name || "—" %></td>
+                <td><span class="badge <%= room.status.badge %>"><%= room.status.label %></span></td>
+                <td class="actions-cell">
+                  <div class="actions" style="justify-content: flex-end;">
+                    <a class="btn btn-secondary btn-sm" href="/rooms/<%= room.id %>/edit">Edit</a>
+                    <form method="POST" action="/rooms/<%= room.id %>/delete" data-confirm="Delete <%= room.name %>?<%= room.tenant_name ? ` ${room.tenant_name} will be left without a room.` : "" %>">
+                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Add a room</h2></div>
+    <%- include("_form", { action: "/rooms", room: {}, submitLabel: "Add room" }) %>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

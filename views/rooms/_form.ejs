@@ -1,0 +1,25 @@
+<form method="POST" action="<%= action %>">
+  <div class="form-grid">
+    <div class="field full">
+      <label for="name">Room name</label>
+      <input id="name" name="name" type="text" maxlength="40" required placeholder="e.g. Room A" value="<%= room.name || "" %>">
+    </div>
+    <div class="field">
+      <label for="monthly_rent">Monthly rent ($)</label>
+      <input id="monthly_rent" name="monthly_rent" type="number" min="0" step="0.01" required value="<%= room.monthly_rent ?? "" %>">
+    </div>
+    <div class="field">
+      <label for="size_sqft">Size (sq ft)</label>
+      <input id="size_sqft" name="size_sqft" type="number" min="1" step="1" value="<%= room.size_sqft ?? "" %>">
+      <span class="hint">Optional. Used to split costs by size.</span>
+    </div>
+    <div class="field full">
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" maxlength="200" placeholder="Private bath, furnished, ..."><%= room.notes || "" %></textarea>
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary"><%= submitLabel %></button>
+    <% if (locals.cancelHref) { %><a class="btn btn-secondary" href="<%= cancelHref %>">Cancel</a><% } %>
+  </div>
+</form>

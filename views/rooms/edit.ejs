@@ -1,0 +1,17 @@
+<%- include("../partials/header") %>
+
+<div class="page-head">
+  <div>
+    <a href="/rooms" class="small">&larr; Back to rooms</a>
+    <h1>Edit <%= room.name %></h1>
+  </div>
+  <form method="POST" action="/rooms/<%= room.id %>/delete" data-confirm="Delete <%= room.name %>?">
+    <button type="submit" class="btn btn-danger">Delete room</button>
+  </form>
+</div>
+
+<div class="card narrow">
+  <%- include("_form", { action: `/rooms/${room.id}`, room, submitLabel: "Save changes", cancelHref: "/rooms" }) %>
+</div>
+
+<%- include("../partials/footer") %>
