@@ -1,0 +1,17 @@
+<%- include("../partials/header") %>
+
+<div class="page-head">
+  <div>
+    <a href="/payments" class="small">&larr; Back to payments</a>
+    <h1>Edit payment</h1>
+  </div>
+  <form method="POST" action="/payments/<%= payment.id %>/delete" data-confirm="Delete this payment?">
+    <button type="submit" class="btn btn-danger">Delete payment</button>
+  </form>
+</div>
+
+<div class="card narrow">
+  <%- include("_form", { action: `/payments/${payment.id}`, payment, tenants, submitLabel: "Save changes", cancelHref: "/payments" }) %>
+</div>
+
+<%- include("../partials/footer") %>

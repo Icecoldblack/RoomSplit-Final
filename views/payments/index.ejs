@@ -1,0 +1,56 @@
+<%- include("../partials/header") %>
+
+<div class="page-head">
+  <div>
+    <h1>Payments</h1>
+    <p><%= money(collected) %> collected for <%= monthLabel(defaults.for_month) %> &middot; rent is late after the 5th</p>
+  </div>
+</div>
+
+<div class="layout-split">
+  <div class="card">
+    <div class="card-head"><h2>Payment log</h2></div>
+    <% if (!payments.length) { %>
+      <div class="empty">No payments logged yet.</div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tenant</th><th>For</th><th class="text-right">Amount</th><th>Paid on</th><th><span class="visually-hidden">Actions</span></th></tr>
+          </thead>
+          <tbody>
+            <% payments.forEach((p) => { %>
+              <tr>
+                <td>
+                  <strong><%= p.tenant_name %></strong>
+                  <div class="muted small"><%= p.room_name || "No room" %><%= p.note ? ` · ${p.note}` : "" %></div>
+                </td>
+                <td><%= monthLabel(p.for_month) %></td>
+                <td class="text-right num"><%= money(p.amount) %></td>
+                <td>
+                  <%= formatDate(p.paid_on) %>
+                  <% if (p.late) { %><span class="badge badge-danger">Late</span><% } %>
+                </td>
+                <td class="actions-cell">
+                  <div class="actions" style="justify-content: flex-end;">
+                    <a class="btn btn-secondary btn-sm" href="/payments/<%= p.id %>/edit">Edit</a>
+                    <form method="POST" action="/payments/<%= p.id %>/delete" data-confirm="Delete this <%= money(p.amount) %> payment from <%= p.tenant_name %>?">
+                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Log a payment</h2></div>
+    <%- include("_form", { action: "/payments", payment: defaults, tenants, submitLabel: "Log payment" }) %>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

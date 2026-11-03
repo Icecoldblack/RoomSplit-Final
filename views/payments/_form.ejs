@@ -1,0 +1,36 @@
+<form method="POST" action="<%= action %>" class="payment-form">
+  <div class="form-grid">
+    <div class="field full">
+      <label for="tenant_id">Tenant</label>
+      <select id="tenant_id" name="tenant_id" required>
+        <option value="">Choose a tenant</option>
+        <% tenants.forEach((t) => { %>
+          <option value="<%= t.id %>" data-rent="<%= t.monthly_rent ?? "" %>" <%= t.id === payment.tenant_id ? "selected" : "" %>><%= t.name %></option>
+        <% }) %>
+      </select>
+      <% if (!tenants.length) { %><span class="hint">Add tenants first on the <a href="/tenants">Tenants</a> page.</span><% } %>
+    </div>
+    <div class="field">
+      <label for="amount">Amount ($)</label>
+      <input id="amount" name="amount" type="number" min="0.01" step="0.01" required value="<%= payment.amount ?? "" %>">
+      <span class="hint">Fills in the tenant's rent when you pick them.</span>
+    </div>
+    <div class="field">
+      <label for="for_month">Rent for month</label>
+      <input id="for_month" name="for_month" type="month" required value="<%= payment.for_month || "" %>">
+    </div>
+    <div class="field">
+      <label for="paid_on">Date paid</label>
+      <input id="paid_on" name="paid_on" type="date" required value="<%= payment.paid_on || "" %>">
+    </div>
+    <div class="field">
+      <label for="note">Note</label>
+      <input id="note" name="note" type="text" maxlength="200" placeholder="Zelle, check #, ..." value="<%= payment.note || "" %>">
+    </div>
+    <div class="field full"><span class="muted small" data-late-hint></span></div>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary"><%= submitLabel %></button>
+    <% if (locals.cancelHref) { %><a class="btn btn-secondary" href="<%= cancelHref %>">Cancel</a><% } %>
+  </div>
+</form>

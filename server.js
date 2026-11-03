@@ -43,6 +43,7 @@ app.use(require("./routes/auth"));
 app.use(["/dashboard", "/rooms", "/tenants", "/payments", "/expenses", "/scenarios"], requireLogin);
 app.use(require("./routes/rooms"));
 app.use(require("./routes/tenants"));
+app.use(require("./routes/payments"));
 
 // Anything else is a 404
 app.use((req, res) => {
