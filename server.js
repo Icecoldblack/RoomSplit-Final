@@ -20,6 +20,8 @@ app.use(session({
   secret: process.env.SESSION_SECRET || "dev-secret", // signs the session id cookie
   resave: false,             // don't resave unchanged sessions
   saveUninitialized: false,  // don't create sessions until something is stored
+  // No maxAge/expires: the browser treats this as a session cookie and deletes it when
+  // the browser closes, so the user stays logged in until then (or until they log out)
   cookie: { httpOnly: true, sameSite: "lax", secure: false }
 }));
 
@@ -34,25 +36,7 @@ app.use((req, res, next) => {
 
 app.get("/", (req, res) => res.render("home", { title: "Home" }));
 app.get("/about", (req, res) => res.render("about", { title: "About" }));
-
-// Demo users (kept simple on purpose; a real site would use a database)
-const users = { dave: "password123", sam: "letmein" };
-
-// POST /login: check credentials, then store the username in the session
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  if (users[username] && users[username] === password) {
-    req.session.user = { id: 0, name: username, username }; // the session variable
-    res.redirect("/");
-  } else {
-    res.send('Wrong username or password. <a href="login.html">Try again</a>');
-  }
-});
-
-// POST /logout: destroys the session so the user is gone
-app.post("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/"));
-});
+app.use(require("./routes/auth"));
 
 // Anything else is a 404
 app.use((req, res) => {
@@ -61,6 +45,17 @@ app.use((req, res) => {
     status: 404,
     heading: "Page not found",
     message: "We couldn't find that page.",
+  });
+});
+
+// Unexpected errors get a friendly page instead of a stack trace
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).render("error", {
+    title: "Error",
+    status: 500,
+    heading: "Something went wrong",
+    message: "Please try again in a moment.",
   });
 });
 

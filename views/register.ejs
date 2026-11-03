@@ -1,0 +1,42 @@
+<%- include("partials/header") %>
+
+<section class="auth">
+  <div class="card">
+    <h1>Create your account</h1>
+    <p class="sub">Set up RoomSplit for your home in a few minutes.</p>
+
+    <% if (errors.length) { %>
+      <div class="flash flash-error" role="alert">
+        <span><% errors.forEach((e) => { %><%= e %><br><% }) %></span>
+      </div>
+    <% } %>
+
+    <form method="POST" action="/register">
+      <div class="field">
+        <label for="name">Your name</label>
+        <input id="name" name="name" type="text" autocomplete="name" maxlength="50" required value="<%= values.name || "" %>" autofocus>
+      </div>
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" required
+               pattern="[A-Za-z0-9_.\-]{3,30}" title="3–30 letters, numbers, dots, dashes or underscores"
+               value="<%= values.username || "" %>">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+        <span class="hint">At least 8 characters.</span>
+      </div>
+      <div class="field">
+        <label for="confirm">Confirm password</label>
+        <input id="confirm" name="confirm" type="password" autocomplete="new-password" required data-match="password">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      </div>
+    </form>
+    <p class="switch">Already have an account? <a href="/login">Log in</a></p>
+  </div>
+</section>
+
+<%- include("partials/footer") %>

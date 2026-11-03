@@ -20,6 +20,16 @@ document.querySelectorAll(".flash").forEach((flash) => {
   setTimeout(hide, 6000);
 });
 
+// Inputs with data-match="otherId" must equal that input (e.g. confirm password)
+document.querySelectorAll("input[data-match]").forEach((input) => {
+  const other = document.getElementById(input.dataset.match);
+  const validate = () => {
+    input.setCustomValidity(input.value && input.value !== other.value ? "Passwords don't match." : "");
+  };
+  input.addEventListener("input", validate);
+  other.addEventListener("input", validate);
+});
+
 // Any form with data-confirm asks before submitting (used for deletes)
 document.querySelectorAll("form[data-confirm]").forEach((form) => {
   form.addEventListener("submit", (event) => {
