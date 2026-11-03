@@ -33,6 +33,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => res.render("home", { title: "Home" }));
+app.get("/about", (req, res) => res.render("about", { title: "About" }));
 
 // Demo users (kept simple on purpose; a real site would use a database)
 const users = { dave: "password123", sam: "letmein" };
