@@ -236,6 +236,7 @@ a:hover { color: var(--primary-ink); }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 .grid-3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid-stats { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .stack > * + * { margin-top: 1.25rem; }
 
 /* List on the left, "add" form on the right */
@@ -259,6 +260,7 @@ a:hover { color: var(--primary-ink); }
 }
 .card-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -286,7 +288,7 @@ a:hover { color: var(--primary-ink); }
 }
 .stat-value {
   font-family: var(--font-display);
-  font-size: 1.85rem;
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   margin: 0.25rem 0;
@@ -378,7 +380,8 @@ input.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(185, 58,
 textarea { min-height: 80px; resize: vertical; }
 
 .form-actions { display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap; }
-.field-error { color: var(--danger); font-size: 0.85rem; min-height: 1em; }
+.field-error { color: var(--danger); font-size: 0.85rem; }
+.field:has(> .field-error:empty) { display: none; }
 
 input[type="range"] { width: 100%; accent-color: var(--primary); }
 
@@ -418,6 +421,8 @@ th {
 tbody tr:hover { background: var(--surface-2); }
 tfoot td { font-weight: 700; border-bottom: 0; }
 td.actions-cell { white-space: nowrap; text-align: right; }
+td.actions-cell .actions { flex-wrap: nowrap; }
+td.num { white-space: nowrap; }
 
 /* ---------- Badges ---------- */
 
@@ -585,7 +590,8 @@ td.actions-cell { white-space: nowrap; text-align: right; }
 .chart .label { fill: var(--muted); font-size: 12px; font-family: var(--font-body); }
 .chart .bar-income { fill: var(--primary); }
 .chart .bar-expense { fill: var(--accent); }
-.legend { display: flex; gap: 1.25rem; font-size: 0.875rem; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; font-size: 0.875rem; color: var(--muted); }
+.legend span { white-space: nowrap; }
 .legend span::before {
   content: "";
   display: inline-block;
@@ -593,12 +599,7 @@ td.actions-cell { white-space: nowrap; text-align: right; }
   height: 10px;
   margin-right: 0.4rem;
   border-radius: 3px;
-  background: currentColor;
-  vertical-align: baseline;
 }
-.legend .income { color: var(--primary); }
-.legend .expense { color: var(--accent); }
-.legend span { color: var(--muted); }
 .legend .income::before { background: var(--primary); }
 .legend .expense::before { background: var(--accent); }
 
