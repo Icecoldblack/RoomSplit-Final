@@ -1,0 +1,70 @@
+<%- include("../partials/header") %>
+
+<div class="page-head">
+  <div>
+    <h1>Shared costs</h1>
+    <p>What the whole home costs each month, and how it splits across your rooms.</p>
+  </div>
+</div>
+
+<div class="layout-split">
+  <div class="card">
+    <div class="card-head"><h2>Monthly costs</h2></div>
+    <% if (!expenses.length) { %>
+      <div class="empty">No costs yet. Start with your mortgage, HOA, utilities and internet.</div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Cost</th><th>Category</th><th class="text-right">Per month</th><th><span class="visually-hidden">Actions</span></th></tr>
+          </thead>
+          <tbody>
+            <% expenses.forEach((e) => { %>
+              <tr>
+                <td><strong><%= e.name %></strong></td>
+                <td><span class="badge badge-muted"><%= e.category %></span></td>
+                <td class="text-right num"><%= money(e.monthly_amount) %></td>
+                <td class="actions-cell">
+                  <div class="actions" style="justify-content: flex-end;">
+                    <a class="btn btn-secondary btn-sm" href="/expenses/<%= e.id %>/edit">Edit</a>
+                    <form method="POST" action="/expenses/<%= e.id %>/delete" data-confirm="Delete <%= e.name %>?">
+                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+          <tfoot>
+            <tr><td colspan="2">Total</td><td class="text-right num"><%= money(total) %></td><td></td></tr>
+          </tfoot>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Add a cost</h2></div>
+    <%- include("_form", { action: "/expenses", expense: {}, categories, submitLabel: "Add cost" }) %>
+  </div>
+</div>
+
+<section class="section card">
+  <div class="card-head">
+    <div>
+      <h2>Rent &amp; cost calculator</h2>
+      <p class="muted small" style="margin: 0;">Each room's share of the shared costs is its break-even rent.</p>
+    </div>
+    <div class="segmented" role="group" aria-label="Split costs">
+      <button type="button" data-split="even" aria-pressed="true">Split evenly</button>
+      <button type="button" data-split="size" aria-pressed="false">Split by size</button>
+    </div>
+  </div>
+  <p class="muted small" data-split-note></p>
+  <div class="table-wrap" id="calculator"></div>
+  <noscript><p class="muted">Turn on JavaScript to use the calculator.</p></noscript>
+</section>
+
+<script type="application/json" id="calculator-data"><%- JSON.stringify({ total, rooms }).replace(/</g, "\\u003c") %></script>
+
+<%- include("../partials/footer") %>

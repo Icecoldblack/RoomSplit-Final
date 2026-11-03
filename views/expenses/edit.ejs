@@ -1,0 +1,17 @@
+<%- include("../partials/header") %>
+
+<div class="page-head">
+  <div>
+    <a href="/expenses" class="small">&larr; Back to shared costs</a>
+    <h1>Edit <%= expense.name %></h1>
+  </div>
+  <form method="POST" action="/expenses/<%= expense.id %>/delete" data-confirm="Delete <%= expense.name %>?">
+    <button type="submit" class="btn btn-danger">Delete cost</button>
+  </form>
+</div>
+
+<div class="card narrow">
+  <%- include("_form", { action: `/expenses/${expense.id}`, expense, categories, submitLabel: "Save changes", cancelHref: "/expenses" }) %>
+</div>
+
+<%- include("../partials/footer") %>

@@ -44,6 +44,7 @@ app.use(["/dashboard", "/rooms", "/tenants", "/payments", "/expenses", "/scenari
 app.use(require("./routes/rooms"));
 app.use(require("./routes/tenants"));
 app.use(require("./routes/payments"));
+app.use(require("./routes/expenses"));
 
 // Anything else is a 404
 app.use((req, res) => {
