@@ -1,15 +1,19 @@
 {
-  "name": "session-login-demo",
+  "name": "roomsplit",
   "version": "1.0.0",
-  "description": "Simple Express login with session variables, /profile and /logout",
+  "description": "RoomSplit: a rental dashboard for owners who rent out their home one room at a time",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "seed": "node --disable-warning=ExperimentalWarning seed.js"
   },
   "license": "ISC",
   "dependencies": {
     "ejs": "^7.0.2",
     "express": "^5.3.0",
     "express-session": "^1.19.0"
+  },
+  "engines": {
+    "node": ">=22.13"
   }
 }
