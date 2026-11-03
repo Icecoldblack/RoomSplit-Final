@@ -46,6 +46,7 @@ app.use(require("./routes/rooms"));
 app.use(require("./routes/tenants"));
 app.use(require("./routes/payments"));
 app.use(require("./routes/expenses"));
+app.use(require("./routes/scenarios"));
 
 // Anything else is a 404
 app.use((req, res) => {

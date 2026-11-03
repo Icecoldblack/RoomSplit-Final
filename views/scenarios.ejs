@@ -1,0 +1,72 @@
+<%- include("partials/header") %>
+
+<div class="page-head">
+  <div>
+    <h1>Scenario comparison</h1>
+    <p>Rent the whole unit to one tenant, or rent it room by room? Try different numbers.</p>
+  </div>
+</div>
+
+<% if (!rooms.length) { %>
+  <div class="empty">Add your rooms on the <a href="/rooms">Rooms</a> page and your costs on the <a href="/expenses">Costs</a> page to compare scenarios.</div>
+<% } else { %>
+  <div class="card">
+    <div class="form-grid">
+      <div class="field">
+        <label for="whole-rent">Whole-unit rent ($/mo)</label>
+        <input id="whole-rent" type="number" min="0" step="50">
+        <span class="hint">What one tenant would pay for the entire home.</span>
+      </div>
+      <div class="field">
+        <label for="monthly-costs">Monthly costs ($)</label>
+        <input id="monthly-costs" type="number" min="0" step="10" value="<%= costs %>">
+        <span class="hint">From your <a href="/expenses">shared costs</a>. Change it to test.</span>
+      </div>
+      <div class="field">
+        <label for="occupancy">Rooms rented: <strong id="occupancy-label"></strong></label>
+        <input id="occupancy" type="range" min="0" max="<%= rooms.length %>" step="1" value="<%= rooms.length %>">
+        <span class="hint">Average room rent: <span id="avg-rent"></span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare section">
+    <div class="card" id="card-whole">
+      <div class="card-head"><h2>Rent the whole unit</h2><span class="badge" data-winner></span></div>
+      <dl>
+        <dt>Rent income</dt><dd data-field="income"></dd>
+        <dt>Costs</dt><dd data-field="costs"></dd>
+        <dt class="total">Monthly cash flow</dt><dd class="total" data-field="monthly"></dd>
+        <dt>Yearly cash flow</dt><dd data-field="yearly"></dd>
+      </dl>
+    </div>
+    <div class="card" id="card-rooms">
+      <div class="card-head"><h2>Rent by the room</h2><span class="badge" data-winner></span></div>
+      <dl>
+        <dt>Rent income</dt><dd data-field="income"></dd>
+        <dt>Costs</dt><dd data-field="costs"></dd>
+        <dt class="total">Monthly cash flow</dt><dd class="total" data-field="monthly"></dd>
+        <dt>Yearly cash flow</dt><dd data-field="yearly"></dd>
+      </dl>
+    </div>
+  </div>
+
+  <section class="section card">
+    <div class="card-head">
+      <h2>By the room, at every occupancy level</h2>
+    </div>
+    <p class="muted small" id="break-even-note"></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Rooms rented</th><th>Occupancy</th><th class="text-right">Income / mo</th><th class="text-right">Cash flow / mo</th><th class="text-right">Cash flow / yr</th><th class="text-right">vs whole unit / yr</th></tr>
+        </thead>
+        <tbody id="levels"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script type="application/json" id="scenario-data"><%- JSON.stringify({ rooms, costs }).replace(/</g, "\\u003c") %></script>
+<% } %>
+
+<%- include("partials/footer") %>
