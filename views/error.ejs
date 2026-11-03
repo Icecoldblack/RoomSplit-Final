@@ -1,0 +1,15 @@
+<%- include("partials/header") %>
+
+<section class="error-page">
+  <div class="error-code"><%= status %></div>
+  <h1><%= heading %></h1>
+  <p class="muted"><%= message %></p>
+  <div class="actions" style="justify-content: center;">
+    <% if (status === 401) { %>
+      <a class="btn btn-primary" href="/login">Log in</a>
+    <% } %>
+    <a class="btn btn-secondary" href="/">Back to home</a>
+  </div>
+</section>
+
+<%- include("partials/footer") %>

@@ -1,0 +1,68 @@
+<%- include("partials/header") %>
+
+<section class="hero">
+  <div>
+    <span class="eyebrow">For owners who rent by the room</span>
+    <h1>One home, split fairly.</h1>
+    <p class="lead">
+      RoomSplit models the money and tracks the day to day: who lives in which room,
+      who has paid, when each lease ends, and what rent you need to break even.
+    </p>
+    <div class="actions">
+      <% if (currentUser) { %>
+        <a class="btn btn-primary btn-lg" href="/dashboard">Go to your dashboard</a>
+      <% } else { %>
+        <a class="btn btn-primary btn-lg" href="/register">Create a free account</a>
+        <a class="btn btn-secondary btn-lg" href="/login">Log in</a>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="house" aria-label="Example home split into rooms">
+    <div class="house-title">Midtown condo &middot; 3 rooms</div>
+    <div class="house-rooms">
+      <div class="house-room"><strong>Room A</strong>Tenant 1</div>
+      <div class="house-room"><strong>Room B</strong>Tenant 2</div>
+      <div class="house-room vacant"><strong>Room C</strong>Vacant</div>
+    </div>
+    <div class="house-shared">
+      <strong>Shared costs</strong>
+      <span class="muted small">Mortgage &middot; HOA &middot; Utilities &middot; Internet</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="grid grid-4">
+    <div class="card">
+      <div class="feature-icon" aria-hidden="true">$</div>
+      <h3>Rent &amp; cost calculator</h3>
+      <p class="muted small">Enter mortgage, HOA, utilities and internet, split them across rooms, and see break-even rent and profit per room.</p>
+    </div>
+    <div class="card">
+      <div class="feature-icon" aria-hidden="true">#</div>
+      <h3>Room &amp; tenant tracker</h3>
+      <p class="muted small">Assign tenants to rooms, store lease dates, log payments and flag late rent.</p>
+    </div>
+    <div class="card">
+      <div class="feature-icon" aria-hidden="true">&harr;</div>
+      <h3>Scenario comparison</h3>
+      <p class="muted small">Whole-unit rental vs renting by the room at different occupancy levels, monthly and yearly.</p>
+    </div>
+    <div class="card">
+      <div class="feature-icon" aria-hidden="true">%</div>
+      <h3>Owner dashboard</h3>
+      <p class="muted small">Income, expenses and occupancy at a glance, plus upcoming renewals and overdue rent.</p>
+    </div>
+  </div>
+</section>
+
+<% if (!currentUser) { %>
+  <section class="cta">
+    <h2>Thinking about renting your place by the room?</h2>
+    <p>Set up your rooms and costs in a few minutes and see if the numbers work.</p>
+    <a class="btn btn-secondary btn-lg" href="/register">Get started</a>
+  </section>
+<% } %>
+
+<%- include("partials/footer") %>

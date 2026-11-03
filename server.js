@@ -1,18 +1,38 @@
+const path = require("path");
 const express = require("express");
 const session = require("express-session");
+const helpers = require("./lib/helpers");
+
 const app = express();
 
-// Parse form data (login form) and serve files from /public
+// Pages are EJS templates in /views; CSS, JS and images are served from /public
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.locals.money = helpers.money;
+app.locals.formatDate = helpers.formatDate;
+app.locals.monthLabel = helpers.monthLabel;
+
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Session setup: the session id is stored in a cookie, the data stays on the server
 app.use(session({
   secret: process.env.SESSION_SECRET || "dev-secret", // signs the session id cookie
   resave: false,             // don't resave unchanged sessions
   saveUninitialized: false,  // don't create sessions until something is stored
-  cookie: { maxAge: 60000 * 60, httpOnly: true, secure: false } // 1 hour
+  cookie: { httpOnly: true, sameSite: "lax", secure: false }
 }));
+
+// Make the logged-in user and any one-time flash message available to every view
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.user || null;
+  res.locals.currentPath = req.path;
+  res.locals.flash = req.session.flash || null;
+  delete req.session.flash;
+  next();
+});
+
+app.get("/", (req, res) => res.render("home", { title: "Home" }));
 
 // Demo users (kept simple on purpose; a real site would use a database)
 const users = { dave: "password123", sam: "letmein" };
@@ -21,27 +41,27 @@ const users = { dave: "password123", sam: "letmein" };
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   if (users[username] && users[username] === password) {
-    req.session.username = username; // the session variable
-    res.send('Logged in! Visit your <a href="/profile">profile</a>.');
+    req.session.user = { id: 0, name: username, username }; // the session variable
+    res.redirect("/");
   } else {
     res.send('Wrong username or password. <a href="login.html">Try again</a>');
   }
 });
 
-// GET /profile: reads the username back out of the session
-app.get("/profile", (req, res) => {
-  if (!req.session.username) {
-    res.send('You are not logged in. <a href="login.html">Login here</a>');
-  } else {
-    res.send(`Hi ${req.session.username}! <br><a href="/logout">Logout</a>`);
-  }
+// POST /logout: destroys the session so the user is gone
+app.post("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect("/"));
 });
 
-// GET /logout: destroys the session so the username is gone
-app.get("/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.send('Logged out! <a href="login.html">Login again</a>');
+// Anything else is a 404
+app.use((req, res) => {
+  res.status(404).render("error", {
+    title: "Not found",
+    status: 404,
+    heading: "Page not found",
+    message: "We couldn't find that page.",
   });
 });
 
-app.listen(3000, () => console.log("Server running at http://localhost:3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`RoomSplit running at http://localhost:${PORT}`));
