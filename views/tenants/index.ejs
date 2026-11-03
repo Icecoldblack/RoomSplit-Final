@@ -1,0 +1,71 @@
+<%- include("../partials/header") %>
+
+<%
+  const leaseBadges = {
+    active: ["badge-success", "Active"],
+    upcoming: ["badge-primary", "Starts soon"],
+    ended: ["badge-muted", "Ended"],
+  };
+%>
+
+<div class="page-head">
+  <div>
+    <h1>Tenants</h1>
+    <p>Who lives in which room, their lease dates, and whether this month's rent is in.</p>
+  </div>
+</div>
+
+<div class="layout-split">
+  <div class="card">
+    <div class="card-head"><h2>Your tenants</h2></div>
+    <% if (!tenants.length) { %>
+      <div class="empty">No tenants yet. Add a tenant and assign them to a room.</div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tenant</th><th>Room</th><th>Lease</th><th>This month</th><th><span class="visually-hidden">Actions</span></th></tr>
+          </thead>
+          <tbody>
+            <% tenants.forEach((t) => { %>
+              <tr>
+                <td>
+                  <strong><%= t.name %></strong>
+                  <div class="muted small"><%= [t.email, t.phone].filter(Boolean).join(" · ") || "No contact info" %></div>
+                </td>
+                <td><%= t.room_name || "—" %></td>
+                <td>
+                  <span class="badge <%= leaseBadges[t.lease][0] %>"><%= leaseBadges[t.lease][1] %></span>
+                  <div class="muted small"><%= formatDate(t.lease_start) %> &ndash; <%= formatDate(t.lease_end) %></div>
+                </td>
+                <td>
+                  <% if (t.rent) { %>
+                    <span class="badge <%= t.rent.badge %>"><%= t.rent.label %></span>
+                    <div class="muted small num"><%= money(t.paid_this_month) %> of <%= money(t.monthly_rent) %></div>
+                  <% } else { %>
+                    <span class="muted">—</span>
+                  <% } %>
+                </td>
+                <td class="actions-cell">
+                  <div class="actions" style="justify-content: flex-end;">
+                    <a class="btn btn-secondary btn-sm" href="/tenants/<%= t.id %>/edit">Edit</a>
+                    <form method="POST" action="/tenants/<%= t.id %>/delete" data-confirm="Delete <%= t.name %>? Their payment history will be deleted too.">
+                      <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>Add a tenant</h2></div>
+    <%- include("_form", { action: "/tenants", tenant: {}, rooms, submitLabel: "Add tenant" }) %>
+  </div>
+</div>
+
+<%- include("../partials/footer") %>

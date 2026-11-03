@@ -1,0 +1,17 @@
+<%- include("../partials/header") %>
+
+<div class="page-head">
+  <div>
+    <a href="/tenants" class="small">&larr; Back to tenants</a>
+    <h1>Edit <%= tenant.name %></h1>
+  </div>
+  <form method="POST" action="/tenants/<%= tenant.id %>/delete" data-confirm="Delete <%= tenant.name %>? Their payment history will be deleted too.">
+    <button type="submit" class="btn btn-danger">Delete tenant</button>
+  </form>
+</div>
+
+<div class="card narrow">
+  <%- include("_form", { action: `/tenants/${tenant.id}`, tenant, rooms, submitLabel: "Save changes", cancelHref: "/tenants" }) %>
+</div>
+
+<%- include("../partials/footer") %>

@@ -42,6 +42,7 @@ app.use(require("./routes/auth"));
 // Everything below these paths is for logged-in owners only (viewing and changing data)
 app.use(["/dashboard", "/rooms", "/tenants", "/payments", "/expenses", "/scenarios"], requireLogin);
 app.use(require("./routes/rooms"));
+app.use(require("./routes/tenants"));
 
 // Anything else is a 404
 app.use((req, res) => {

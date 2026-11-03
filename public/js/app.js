@@ -30,6 +30,23 @@ document.querySelectorAll("input[data-match]").forEach((input) => {
   other.addEventListener("input", validate);
 });
 
+// Lease forms: the end date can't come before the start date
+document.querySelectorAll(".lease-form").forEach((form) => {
+  const start = form.querySelector("[name=lease_start]");
+  const end = form.querySelector("[name=lease_end]");
+  const message = form.querySelector("[data-lease-error]");
+  const validate = () => {
+    const bad = start.value && end.value && end.value < start.value;
+    end.setCustomValidity(bad ? "Lease end must be on or after the lease start." : "");
+    end.classList.toggle("invalid", Boolean(bad));
+    message.textContent = bad ? "Lease end must be on or after the lease start." : "";
+    if (start.value) end.min = start.value;
+  };
+  start.addEventListener("input", validate);
+  end.addEventListener("input", validate);
+  validate();
+});
+
 // Any form with data-confirm asks before submitting (used for deletes)
 document.querySelectorAll("form[data-confirm]").forEach((form) => {
   form.addEventListener("submit", (event) => {

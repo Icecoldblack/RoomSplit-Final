@@ -1,0 +1,42 @@
+<form method="POST" action="<%= action %>" class="lease-form">
+  <div class="form-grid">
+    <div class="field full">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" maxlength="60" required value="<%= tenant.name || "" %>">
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" maxlength="100" value="<%= tenant.email || "" %>">
+    </div>
+    <div class="field">
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="tel" maxlength="30" value="<%= tenant.phone || "" %>">
+    </div>
+    <div class="field full">
+      <label for="room_id">Room</label>
+      <select id="room_id" name="room_id">
+        <option value="">No room yet</option>
+        <% rooms.forEach((room) => { %>
+          <% const taken = room.tenant_id && room.tenant_id !== tenant.id; %>
+          <option value="<%= room.id %>" <%= room.id === tenant.room_id ? "selected" : "" %> <%= taken ? "disabled" : "" %>>
+            <%= room.name %><%= taken ? ` (taken by ${room.tenant_name})` : "" %>
+          </option>
+        <% }) %>
+      </select>
+      <% if (!rooms.length) { %><span class="hint">Add rooms first on the <a href="/rooms">Rooms</a> page.</span><% } %>
+    </div>
+    <div class="field">
+      <label for="lease_start">Lease start</label>
+      <input id="lease_start" name="lease_start" type="date" value="<%= tenant.lease_start || "" %>">
+    </div>
+    <div class="field">
+      <label for="lease_end">Lease end</label>
+      <input id="lease_end" name="lease_end" type="date" value="<%= tenant.lease_end || "" %>">
+    </div>
+    <div class="field full"><span class="field-error" data-lease-error></span></div>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary"><%= submitLabel %></button>
+    <% if (locals.cancelHref) { %><a class="btn btn-secondary" href="<%= cancelHref %>">Cancel</a><% } %>
+  </div>
+</form>
